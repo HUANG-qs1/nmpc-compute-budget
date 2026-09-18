@@ -1,0 +1,33 @@
+== l50_scan verdict (descriptive, no gate; D49 frozen method) ==
+rows loaded: 300 from 3 files | duplicate keys: 0
+
+fixed20 fig8/burst divergence series (DIV: max_err > 5.0, D48):
+blen  duty%   k/n     rate   Wilson95        it_div  it_surv  TO_med
+  30   16.8    0/15  0.000  [0.000, 0.204]      nan    7.70  0.210
+  40   21.2    0/15  0.000  [0.000, 0.204]      nan    7.80  0.240
+  50   25.2    0/15  0.000  [0.000, 0.204]      nan    8.00  0.262
+  60   28.8    2/15  0.133  [0.037, 0.379]     8.40    8.00  0.300
+  70   32.1    1/15  0.067  [0.012, 0.298]     9.00    8.15  0.350
+  80   35.0    1/15  0.067  [0.012, 0.298]     9.30    8.45  0.366
+  90   37.8    4/15  0.267  [0.109, 0.520]     9.35    8.40  0.366
+ 100   40.3    6/15  0.400  [0.198, 0.643]     8.75    8.40  0.400
+ 110   42.6    8/15  0.533  [0.301, 0.752]     9.00    8.40  0.440
+ 130   46.7    7/15  0.467  [0.248, 0.699]     9.10    8.60  0.520
+
+-- L50 (piecewise-linear on rate, frozen D49) --
+L50 crossing in (100, 110): L50 ~= 107.5 beats
+L50 crossing in (110, 130): L50 ~= 120.0 beats
+onset: first divergence at blen=60, bracket (50, 60]
+E1 monotone: holds (within +/-1 seed noise)
+
+context v3 fig8/burst:
+  blen=  30:  0/15  0.000  [0.000, 0.204]
+  blen= 100:  0/15  0.000  [0.000, 0.204]
+
+-- task severity (P4): burst @ blen=100 --
+  circle fixed20  2/15  0.133  [0.037, 0.379]   TO_med 0.400
+  circle v3       0/15  0.000  [0.000, 0.204]   TO_med 0.000
+  fig8   fixed20  6/15  0.400  [0.198, 0.643]   TO_med 0.400
+  fig8   v3       0/15  0.000  [0.000, 0.204]   TO_med 0.000
+
+(ends)

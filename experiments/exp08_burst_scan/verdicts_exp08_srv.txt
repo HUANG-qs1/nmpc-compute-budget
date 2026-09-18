@@ -1,0 +1,32 @@
+== audit ==
+  rows=600
+  seeds(15): [330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344]
+  method: {'fixed20': 300, 'v3': 300}
+  task: {'circle': 150, 'fig8': 150, 'hover': 150, 'step': 150}
+  blen: {5: 120, 10: 120, 15: 120, 20: 120, 30: 120}
+  rows with empty numeric fields: none
+  duplicate cells: none
+
+== divergence rate by task/method/blen (n=15 seeds each) ==
+  task   method         5      10      15      20      30
+  hover  v3          0.0%    6.7%   13.3%   26.7%   40.0%
+  hover  fixed20     6.7%   20.0%   26.7%   33.3%   40.0%
+  step   v3          0.0%    6.7%   13.3%   26.7%   40.0%
+  step   fixed20     6.7%   20.0%   26.7%   33.3%   40.0%
+  circle v3         40.0%   46.7%   60.0%   73.3%   73.3%
+  circle fixed20   100.0%  100.0%  100.0%  100.0%  100.0%
+  fig8   v3          6.7%   26.7%   33.3%   46.7%   73.3%
+  fig8   fixed20    33.3%   46.7%   66.7%   86.7%   80.0%
+
+== pre-registered verdicts (i.9) ==
+P4 dose-cliff: per-task monotone OK; circle+fig8 @blen=15 = 46.7% (need >=40%) OK -> PASS
+    v3 hover  div=[0%, 7%, 13%, 27%, 40%] mono
+    v3 step   div=[0%, 7%, 13%, 27%, 40%] mono
+    v3 circle div=[40%, 47%, 60%, 73%, 73%] mono
+    v3 fig8   div=[7%, 27%, 33%, 47%, 73%] mono
+P5 boundary shift -> FAIL
+    circle L50(v3)=15 > L50(fixed20)=5 -> OK
+    fig8   L50(v3)=30 > L50(fixed20)=15 -> OK
+    hover  @blen=30: v3=40.0% < fixed20=40.0% -> FAIL
+    step   @blen=30: v3=40.0% < fixed20=40.0% -> FAIL
+P6 mechanism: diverged-v3 iter_mean by blen [blen=5:19.2, blen=10:18.6, blen=15:17.6, blen=20:17.1, blen=30:16.8] -> FAIL

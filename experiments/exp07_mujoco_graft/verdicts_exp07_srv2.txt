@@ -1,0 +1,51 @@
+== audit ==
+  rows=1080
+  seeds(15): [230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244]
+  method: {'fixed20': 360, 'reactive': 360, 'v3': 360}
+  task: {'circle': 270, 'fig8': 270, 'hover': 270, 'step': 270}
+  pattern: {'burst': 360, 'periodic': 360, 'random': 360}
+  rows with empty numeric fields: none
+  duplicate cells: none
+
+== divergence (max_err>100) by task/pattern/method ==
+  circle burst     fixed20  div= 29/ 30 ( 96.7%)
+  circle burst     reactive div= 30/ 30 (100.0%)
+  circle burst     v3       div= 22/ 30 ( 73.3%)
+  circle periodic  fixed20  div= 29/ 30 ( 96.7%)
+  circle periodic  reactive div= 30/ 30 (100.0%)
+  circle periodic  v3       div= 13/ 30 ( 43.3%)
+  circle random    fixed20  div= 30/ 30 (100.0%)
+  circle random    reactive div= 30/ 30 (100.0%)
+  circle random    v3       div= 26/ 30 ( 86.7%)
+  fig8   burst     fixed20  div= 26/ 30 ( 86.7%)
+  fig8   burst     reactive div= 28/ 30 ( 93.3%)
+  fig8   burst     v3       div= 23/ 30 ( 76.7%)
+  fig8   periodic  fixed20  div= 30/ 30 (100.0%)
+  fig8   periodic  reactive div= 30/ 30 (100.0%)
+  fig8   periodic  v3       div= 17/ 30 ( 56.7%)
+  fig8   random    fixed20  div= 30/ 30 (100.0%)
+  fig8   random    reactive div= 30/ 30 (100.0%)
+  fig8   random    v3       div= 17/ 30 ( 56.7%)
+  hover  burst     fixed20  div= 13/ 30 ( 43.3%)
+  hover  burst     reactive div= 13/ 30 ( 43.3%)
+  hover  burst     v3       div= 11/ 30 ( 36.7%)
+  hover  periodic  fixed20  div= 15/ 30 ( 50.0%)
+  hover  periodic  reactive div= 15/ 30 ( 50.0%)
+  hover  periodic  v3       div=  3/ 30 ( 10.0%)
+  hover  random    fixed20  div= 30/ 30 (100.0%)
+  hover  random    reactive div= 30/ 30 (100.0%)
+  hover  random    v3       div=  0/ 30 (  0.0%)
+  step   burst     fixed20  div= 13/ 30 ( 43.3%)
+  step   burst     reactive div= 13/ 30 ( 43.3%)
+  step   burst     v3       div= 10/ 30 ( 33.3%)
+  step   periodic  fixed20  div= 15/ 30 ( 50.0%)
+  step   periodic  reactive div= 15/ 30 ( 50.0%)
+  step   periodic  v3       div=  7/ 30 ( 23.3%)
+  step   random    fixed20  div= 30/ 30 (100.0%)
+  step   random    reactive div= 30/ 30 (100.0%)
+  step   random    v3       div=  0/ 30 (  0.0%)
+
+== pre-registered verdicts ==
+  P1 recovery-window: v3 circle/fig8 @periodic|burst div=62.5% (threshold <=20%) -> FAIL  [n=120]
+  P2 doom-loop mechanism: iter_mean div=18.9 vs surv=4.2 (x4.5, need >=5x) -> FAIL; budget_mean div=175.5ms vs surv=174.5ms (covariate)  [n=149/211]
+  P3 envelope order: v3=41.4% (n=360) < fixed20=80.6% (n=360) <= reactive=81.7% (n=360) -> PASS

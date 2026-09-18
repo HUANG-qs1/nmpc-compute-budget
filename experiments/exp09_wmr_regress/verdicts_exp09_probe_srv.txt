@@ -1,0 +1,14 @@
+=== AUDIT ===
+rows: 30
+cell ('fig8', 'fixed20', 'burst', 100): n=15
+cell ('fig8', 'v3', 'burst', 100): n=15
+audit done
+
+=== per-cell summary (div = max_err > 5.0, frozen pre-data) ===
+traj    pattern  blen  method      n    div |   TO_med   TO_max |  it_div it_surv | drift_q95
+fig8    burst    100   v3         15  0/15   0.0% |   0.0000   0.0010 |       -     7.6 |  2.7970
+fig8    burst    100   fixed20    15  6/15  40.0% |   0.4000   0.7000 |     8.8     8.4 |  1.0229
+    -> fig8/burst blen=100 div gap (fixed20 - v3) = +40.0pp
+
+=== direction check (DESCRIPTIVE, reads back the pre-registered expectation) ===
+fig8/burst blen=100: fixed20 40.0% v3 0.0% -> probe branch (a) cliff in (30,100], v3 rescues

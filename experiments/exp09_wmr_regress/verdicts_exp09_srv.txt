@@ -1,0 +1,24 @@
+=== AUDIT ===
+rows: 120 (expect 120)
+seeds: 15 distinct, range 430..444
+missing combos: 0
+audit done
+
+=== per-cell summary (div = max_err > 5.0, frozen pre-data) ===
+traj    pattern  method      n    div |   TO_med   TO_max |  it_div it_surv | drift_q95
+circle  periodic v3         15  0/15   0.0% |   0.0000   0.0000 |       -     7.8 |  1.0072
+circle  periodic fixed20    15  0/15   0.0% |   0.2000   0.2000 |       -     8.0 |  1.0007
+    -> circle/periodic div gap (fixed20 - v3) = +0.0pp
+circle  burst    v3         15  0/15   0.0% |   0.0000   0.0000 |       -     7.8 |  1.0082
+circle  burst    fixed20    15  0/15   0.0% |   0.2100   0.3000 |       -     8.0 |  1.0005
+    -> circle/burst div gap (fixed20 - v3) = +0.0pp
+fig8    periodic v3         15  0/15   0.0% |   0.0000   0.0000 |       -     7.7 |  1.0015
+fig8    periodic fixed20    15  0/15   0.0% |   0.2000   0.2000 |       -     7.8 |  1.0082
+    -> fig8/periodic div gap (fixed20 - v3) = +0.0pp
+fig8    burst    v3         15  0/15   0.0% |   0.0000   0.0000 |       -     7.7 |  1.0074
+fig8    burst    fixed20    15  0/15   0.0% |   0.2100   0.3000 |       -     7.7 |  1.0064
+    -> fig8/burst div gap (fixed20 - v3) = +0.0pp
+
+=== direction check (DESCRIPTIVE, reads back the pre-registered expectation) ===
+fig8/burst gap = +0.0pp; expectation: fixed20 >> v3 -> direction NOT REPLICATED
+fig8/periodic max div = 0.0%; expectation: ~0 -> CONSISTENT
