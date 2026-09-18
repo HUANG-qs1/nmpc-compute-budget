@@ -1,0 +1,4 @@
+CPU(s):                                  20
+On-line CPU(s) list:                     0-19
+Model name:                              13th Gen Intel(R) Core(TM) i7-13700H
+NUMA node0 CPU(s):                       0-19
