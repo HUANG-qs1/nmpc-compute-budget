@@ -20,7 +20,7 @@ os.makedirs(FIGS, exist_ok=True)
 class _AsciiMinus(mticker.LogFormatter):
     def __call__(self, x, pos=None):
         t = super().__call__(x, pos)
-        return t.replace("\u2212", "-") if t else t
+        return t.replace("−", "-") if t else t
 
 plt.rcParams.update({
     "font.family": "Noto Sans", "font.size": 6.5,
@@ -335,4 +335,32 @@ def build_f5():
     D = [duty(b) for b in BL]
     rate = [100*fx[b][0]/fx[b][1] for b in BL]
     lo = [100*(fx[b][0]/fx[b][1]-wilson(*fx[b])[0]) for b in BL]
-    hi = [100*(wilson(*fx[b])[1]-fx[b][0]) for b in BL]
+    hi = [100*(wilson(*fx[b])[1]-fx[b][0]/fx[b][1]) for b in BL]
+    fig, ax = plt.subplots(figsize=(100*MM, 82*MM))
+    ax.axvspan(37.6, 45.7, color="#999", alpha=0.14, lw=0)
+    ax.text(41.65, 96, "L50", ha="center", fontsize=6.5, color="#666")
+    ax.errorbar(D, rate, yerr=[lo, hi], color=OI["fixed20"], marker="s", ms=3.4, lw=1.2,
+                capsize=1.4, capthick=0.7, elinewidth=0.7, label="fixed20")
+    vD = [duty(b) for b in sorted(v3z)]
+    vhi = [100*wilson(*v3z[b])[1] for b in sorted(v3z)]
+    ax.errorbar(vD, [0]*len(vD), yerr=[[0]*len(vD), vhi], color=OI["v3"], marker="o", ms=3.4,
+                lw=1.2, capsize=1.4, capthick=0.7, elinewidth=0.7, label="v3 (ours)")
+    ax.annotate("onset", xy=(duty(60), 13.3), xytext=(duty(60)-4.5, 30), fontsize=6, color="#555",
+                arrowprops=dict(arrowstyle="-", lw=0.5, color="#888"))
+    ax.set_xlabel("burst duty (%)"); ax.set_ylabel("divergence rate (%)")
+    ax.set_ylim(-6, 108); ax.set_xlim(14, 49)
+    ax.yaxis.set_ticks([0, 20, 40, 60, 80, 100])
+    ax.grid(axis="y", color="#e5e5e5", lw=0.4, zorder=0)
+    axt = ax.twiny(); axt.set_xlim(ax.get_xlim()); axt.spines.top.set_visible(True)
+    axt.set_xticks(D); axt.set_xticklabels([str(b) for b in BL])
+    axt.set_xlabel("burst length (steps)", fontsize=6.5, labelpad=3)
+    axt.tick_params(length=2)
+    ax.legend(frameon=False, loc="upper left", fontsize=6.2)
+    fig.tight_layout()
+    fig.savefig(f"{FIGS}/F5_wmr_dose_response.png", dpi=600); fig.savefig(f"{FIGS}/F5_wmr_dose_response.svg")
+    plt.close(fig)
+    print("F5 OK: fixed20 counts", [fx[b][0] for b in BL])
+
+build_f4(); build_f5()
+build_f11(); build_f12(); build_f13(); build_f14()
+print("F4/F5/F11/F12/F13/F14 written to", FIGS)
