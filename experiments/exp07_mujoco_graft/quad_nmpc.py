@@ -68,7 +68,7 @@ def _build(N, cap_s=None):
     opti.solver("ipopt", {"ipopt": iopts, "print_time": False})
     return opti, x, u, x0, ref
 
-def quad_mpc(x12, ref_seg, N, dt=DT, tol=TOL, cap_s=None):
+def quad_mpc(x12, ref_seg, N, dt=DT, tol=TOL, cap_s=None, partial=False):
     """Solve one beat. ref_seg: (N+1, 3) positions. Returns u (4,).
     cap_s: hard deadline seconds (i.7a); None = uncapped (calibration & tests)."""
     key = (N, cap_s)
@@ -99,6 +99,13 @@ def quad_mpc(x12, ref_seg, N, dt=DT, tol=TOL, cap_s=None):
         except Exception:
             LAST_STATS["iter_count"] = 200
         out = U_HOVER.copy()
+        if partial:  # exp10 bsf: CpuTime 中止时取未收敛迭代序列的首拍控制
+            try:
+                cand = np.asarray(opti.debug.value(u), float)[:, 0]
+                if cand.shape == (4,) and np.all(np.isfinite(cand)):
+                    out = cand
+            except Exception:
+                pass
         if "CpuTime" not in rs_msg and "CpuTime" not in str(exc):
             _SOLVERS.pop(key, None)  # genuine failure: rebuild; CpuTime abort keeps solver
     return out

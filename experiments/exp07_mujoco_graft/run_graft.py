@@ -22,8 +22,8 @@ DT, TOTAL, TOL = 0.1, 100.0, 1e-4
 HDR = "task,method,pattern,seed,mm,budget_mean,rmse,max_err,e95,timeout_rate,iter_mean,time_q50,gearL,gearM,gearH,calib_ms,budget_scale,safety_rate"
 CALIB_REF = 285.0  # CALIB_REF_quad (i.5): far-state Np15 probe median, laptop 2026-09-08
 KAPPA = 6.052      # q90_quad(Np15)/27.0 = 163.4/27.0, gear scan D41
-METHODS = ["v3", "reactive", "fixed20"]
-FIXED_N = {"fixed20": 20}
+METHODS = ["v3", "reactive", "fixed20", "fixed10", "bsf"]
+FIXED_N = {"fixed20": 20, "fixed10": 10, "bsf": 20}
 REACT_GEARS = [10, 15, 20]
 TASKS = ["hover", "step", "circle", "fig8"]
 PATTERNS = ["random", "periodic", "burst"]
@@ -119,12 +119,13 @@ def run_one(task, seed, method, budgets, mm, dump=None, meta=None):
         if dump is not None:
             x12_log.append(x12.copy())
         t0 = time.perf_counter()
-        u = quad_mpc(x12, seg, N=N, dt=DT, tol=TOL, cap_s=CAP_S)
+        u = quad_mpc(x12, seg, N=N, dt=DT, tol=TOL, cap_s=CAP_S,
+                     partial=(method == "bsf"))
         ms = (time.perf_counter()-t0)*1000
-        if ms > budgets[t] or not qn.LAST_STATS["success"]:
-            u = prev_u; timeouts.append(1)
-        else:
-            timeouts.append(0)
+        to = ms > budgets[t] or not qn.LAST_STATS["success"]
+        if to and method != "bsf":
+            u = prev_u  # exp10: bsf 臂超时不回退，施加求解器返回的 best-so-far
+        timeouts.append(1 if to else 0)
         prev_u = u.copy()
         if dump is not None:
             u_log.append(u.copy()); n_log.append(N)
